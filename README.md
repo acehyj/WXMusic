@@ -1,10 +1,16 @@
 # wxmusic
 
-> music player
+> 仿网易云音乐
 
 ## Build Setup
 
 ``` bash
+# install api
+https://github.com/Binaryify/NeteaseCloudMusicApi
+
+#run server
+node app.js
+
 # install dependencies
 npm install
 
