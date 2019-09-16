@@ -6,7 +6,7 @@
 
 ``` bash
 # install api
-https://github.com/Binaryify/NeteaseCloudMusicApi
+https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi
 
 #run server
 node app.js
