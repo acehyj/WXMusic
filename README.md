@@ -13,7 +13,7 @@ npm install
 node app.js
 
 # install dependencies
-https://github.com/acehyj/WYMusic.git
+git clone https://github.com/acehyj/WYMusic.git
 npm install
 
 # serve with hot reload at localhost:8080
