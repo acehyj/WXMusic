@@ -5,15 +5,15 @@
 ## Build Setup
 
 ``` bash
-# install NeteaseCloudMusicApi
+
+# 下载网易云音乐 NodeJS 版 API
 git clone https://github.com/Binaryify/NeteaseCloudMusicApi.git
 npm install
 
-#run server
+#运行后台服务器
 node app.js
 
 # install dependencies
-git clone https://github.com/acehyj/WYMusic.git
 npm install
 
 # serve with hot reload at localhost:8080
