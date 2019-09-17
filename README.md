@@ -1,17 +1,19 @@
-# wxmusic
+# wymusic
 
 > 仿网易云音乐
 
 ## Build Setup
 
 ``` bash
-# install api
-https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi
+# install NeteaseCloudMusicApi
+git clone https://github.com/Binaryify/NeteaseCloudMusicApi.git
+npm install
 
 #run server
 node app.js
 
 # install dependencies
+https://github.com/acehyj/WYMusic.git
 npm install
 
 # serve with hot reload at localhost:8080
