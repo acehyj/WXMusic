@@ -1,7 +1,9 @@
 <template>
   <div class="loading">
-    <div class="iconfont">&#xe6ab;</div>
-    <p class="desc">{{title}}</p>
+    <div class="wrapper"> 
+      <div class="iconfont">&#xe6ab;</div>
+      <p class="desc">{{title}}</p>
+    </div>
   </div>
 </template>
 
@@ -10,7 +12,7 @@ export default {
   props: {
       title: {
         type: String,
-        default: '正在载入...'
+        default: '正在载入'
       }
     }
 }
@@ -19,13 +21,27 @@ export default {
 <style scoped lang="stylus" rel="stylesheet/stylus">
 
   .loading
-    text-align: center
-    .iconfont
-      font-size: 30px
-      color: #aaa
-      margin-bottom: .15rem
-    .desc
-      font-size: 15px
-      color: #777
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    display: flex
+    justify-content: center
+    align-items: center
+    .wrapper
+      width: 1.5rem
+      height: 1rem
+      display: flex
+      flex-direction: column
+      justify-content: center
+      align-items: center
+      .iconfont
+        font-size: 30px
+        color: #aaa
+        margin-bottom: .15rem
+      .desc
+        font-size: 15px
+        color: #777
 
 </style>

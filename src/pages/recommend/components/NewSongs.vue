@@ -12,9 +12,7 @@
         <span class="play iconfont">&#xe614;</span>
       </li>
     </ul>
-    <div class="loading-container" v-show="!showSongs">    
-        <loading></loading>
-    </div> 
+    <loading v-show="!showSongs"></loading>
   </div>
 </template>
 
@@ -81,9 +79,9 @@ export default {
         width: .8rem
         color: $color-play-icon
         font-size: .5rem
-    .loading-container
-      position: absolute
-      width: 100%
-      top: 50%
-      transform: translateY(-50%)
+    // .loading-container
+    //   position: absolute
+    //   width: 100%
+    //   top: 50%
+    //   transform: translateY(-50%)
 </style>

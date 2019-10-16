@@ -25,9 +25,7 @@
           </div>
         </li>
       </ul>
-      <div class="loading-container" v-show="!officialList.length">
-        <loading></loading>
-      </div>
+      <loading v-show="!officialList.length"></loading>
     </div>
     <router-view></router-view>
   </div>
@@ -151,10 +149,5 @@ export default {
           .name
             font: $font-medium-x
             padding: .1rem .2rem .4rem .1rem 
-    .loading-container
-      position: absolute
-      width: 100%
-      top: 50%
-      transform: translateY(-50%)
 
 </style>

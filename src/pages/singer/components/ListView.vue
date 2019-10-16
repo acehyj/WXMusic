@@ -1,58 +1,30 @@
 <template>
-    <scroll class="list-view" :data="list" ref="listView">
-      <ul class="list-content" v-if="showSinger"> 
-        <li v-for="group of list" :key="group.title" :ref="group.title">
-          <h1  class="title">{{group.title}}</h1> 
-            <ul>   
-              <li class="item" 
-                  v-for="item of group.items" 
-                  :key="item.id"
-                  @click="selectItem(item)">
-
-                  <img class="pic" v-lazy="item.pic" alt="加载中..">
-                  <span class="name">{{item.name}}</span>
-                  <span class="icon iconfont">&#xe602;</span>
-              </li>
-            </ul>
-        </li>
-      </ul> 
-      <div class="list-shortcut">
-        <ul>
-          <li v-for="(item, index) in letters" :key="index"  class="item" 
-              :ref="item"
-              @click="handleLetterClick"
-              @touchstart="handleTouchStart"
-              @touchmove="handleTouchMove"
-              @touchend="handleTouchEnd">
-            {{item}}
+    <div class="list-view"  ref="wrapper">
+      <div>
+        <ul class="list-content" v-for="group of list" v-if="showSinger"> 
+          <li :key="group.title" :ref="group.title.slice(0,1)">
+            <h1 class="title">{{group.title}}</h1> 
+              <ul>   
+                <li class="item" 
+                    v-for="item of group.items" 
+                    :key="item.id"
+                    @click="selectItem(item)">
+                    <img class="pic" v-lazy="item.pic" alt="加载中..">
+                    <span class="name">{{item.name}}</span>
+                    <span class="icon iconfont">&#xe602;</span>
+                </li>
+              </ul>
           </li>
-        </ul>
+        </ul> 
       </div>
-      <div v-show="!list.length" class="loading-container">
-        <loading></loading>
-      </div>
-    </scroll>
+    </div>
 </template>
 <script>
-import Scroll from 'base/scroll/scroll'
-import Loading from "base/loading/Loading"
-import {getData} from 'assets/js/dom'
+import Bscroll from 'better-scroll'
 import {debounce} from 'assets/js/util'
-
-const TITLE_HEIGHT = 30
-const ANCHOR_HEIGHT = 18
 
 export default {
   name: 'ListView',
-  data() {
-    return {
-      touchStatus: false,
-      startY: 0
-    }
-  },
-  updated() {
-    this.startY = this.$refs['A'][1].offsetTop
-  },
   props:{
     list: Array,
     letter: String
@@ -60,57 +32,38 @@ export default {
   computed: {
     showSinger() {
       return this.list.length
-    },
-    letters() {
-      return this.list.map((group) => {
-        return group.title.substr(0, 1)
-      })
     }
   },
   components:{
-    Loading,
-    Scroll
+    Bscroll
   },
-  created() {
-    this.probeType = 3
-    this.listenScroll = true
-    this.touch = {}
-    this.listHeight = []
+
+  mounted () {
+    this.scroll = new Bscroll(this.$refs.wrapper)
+  },
+  watch: {
+    letter() {
+      this.scroll.scrollToElement(this.$refs[this.letter][0])
+    }
   },
   methods: {
     selectItem(item) {
       this.$emit('select',item)
-    },
-    handleLetterClick(e) {
-      const letter = e.target.innerText
-      const element = this.$refs[letter][0]
-      this.$refs.listView.scrollToElement(element)
-    },
-    handleTouchStart(e) {
-      this.touchStatus = true
-    },
-    handleTouchMove(e) {
-      if(this.touchStatus) {
-        debounce((e)=>{
-          const touchY = e.touches[0].clientY
-          const index = Math.floor((touchY - this.startY) / 25)
-          if (index>=0 && index< this.letters.length) {
-            this.$refs.listView.scrollToElement(this.letters[index])
-          }
-        },16)
-      }
-    },
-    handleTouchEnd() {
-      this.touchStatus = true
     }
   }
+  
 }
 </script>
  
 <style lang="stylus" scoped>
   @import "~assets/styles/variable"
   .list-view
-    margin-top: 2.3rem
+    overflow:hidden
+    position: absolute
+    top: 2.3rem
+    left: 0
+    right:0
+    bottom: 0
     .list-content
       .title
         box-sizing: border-box
@@ -156,9 +109,5 @@ export default {
         line-height: $font-small
         &.current
           color: red
-    .loading-container
-      position: absolute
-      width: 100%
-      top: 50%
-      transform: translateY(-50%)
+    
 </style>

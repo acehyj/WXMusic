@@ -1,10 +1,15 @@
 <template>
   <div class="singer">
     <list-view 
-      :list='singerList'
-      :letter='letter'
+      :list="singerList"
+      :letter="letter"
       @select="selectSinger"
     ></list-view>
+    <alphabet v-if="showAlphabet"
+              :list='shortcutList'
+              @change='handleLetterChange'
+    ></alphabet>
+    <loading v-if"!singerList.length"></loading>
     <router-view></router-view>  
   </div>
 </template>
@@ -12,10 +17,11 @@
 <script>
 import {mapMutations} from 'vuex'
 import ListView from './components/ListView'
-import {getSinger} from 'api/singer'
+import Alphabet from "./components/Alphabet"
+import Loading from "base/loading/Loading"
+import {getHotSinger,getSinger} from 'api/singer'
 import Singer from 'assets/js/singer'
 import {ERR_OK} from 'api/config'
-import pinyin from 'pinyin'
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 
@@ -25,11 +31,14 @@ export default {
   data(){
     return{
       singerList:[],
-      letter:''
+      letter:'',
+      showAlphabet: false
     }
   },
   components:{
-    ListView
+    ListView,
+    Alphabet,
+    Loading
   },
   computed:{
     shortcutList() {
@@ -39,66 +48,52 @@ export default {
     }
   },
   created(){
-    this._getSinger()
+    this._getHotSinger()
   },
   methods: {
-    _getSinger() {
-      getSinger().then((res)=>{
+    _getHotSinger() {
+      getHotSinger().then((res)=>{
         if(res.data.code===ERR_OK){  
-          this.singerList = this._normalizeSinger(res.data.artists)       
+          this._normalizeSinger(HOT_NAME,res.data.artists.slice(0,HOT_SINGER_LEN))
         }
+        this._getSinger()
       })
     },
-    _normalizeSinger(singerList) { 
-      let map = {
-          hot: {
-            title: HOT_NAME,
-            items: []
+    _getSinger() {
+      for (var i=0; i<26; i++) {
+        let alphabet = String.fromCharCode(65 + i)      
+        getSinger(alphabet).then((res)=>{
+          if(res.data.code===ERR_OK){  
+            this._normalizeSinger(alphabet,res.data.artists)   
           }
-        }
-      singerList.forEach((item, index) => {
-          singerList.forEach((item)=>{
-          let py = pinyin(item.name,{style: pinyin.STYLE_FIRST_LETTER})
-          item.firstLetter = py[0][0].substring(0,1).toUpperCase()    
         })
-        if (index < HOT_SINGER_LEN) {
-          map.hot.items.push(new Singer({
+      }
+    },
+     _normalizeSinger(title,list) { 
+      let group = {
+          title: title,
+          items: []
+      }
+      for(let item of list) {
+        group.items.push(
+          new Singer({
             name: item.name,
             id: item.id,
             pic: item.img1v1Url,
             pic2: item.picUrl,
             alias: item.alias
-          }))
-        }
-        const key = item.firstLetter
-        if (!map[key]) {
-          map[key] = {
-            title: key,
-            items: []
-          }
-        }
-        map[key].items.push(new Singer({
-          name: item.name,
-          id: item.id,
-          pic: item.img1v1Url,
-          pic2: item.picUrl,
-          alias: item.alias
-        }))
-      })
-      let ret = []
-      let hot = []
-      for (let key in map) {
-        let val = map[key]
-        if (val.title.match(/[a-zA-Z]/)) {
-          ret.push(val)
-        } else if (val.title === HOT_NAME) {
-          hot.push(val)
-        }
+          })
+        )
       }
-      ret.sort((a, b) => {
-        return a.title.charCodeAt(0) - b.title.charCodeAt(0)
-      })
-      return hot.concat(ret)
+      this.singerList.push(group)
+
+      if(this.singerList.length === 27) {
+        var list = this.singerList.splice(0,1)
+        this.singerList.sort((a, b) => {
+          return a.title - b.title
+        }).unshift(list[0])
+        this.showAlphabet = true
+      }
     },
     selectSinger(singer) {
       this.$router.push({
