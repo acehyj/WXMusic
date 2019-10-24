@@ -64,7 +64,8 @@
     },
     watch: {
       percent(newPercent) {
-        if(newPercent >= 0 &&!this.touch.initalized){
+      //拖动的时候，percent也在改变，会同时调用_offset()，会有跳动现象，所以要加一个判断条件
+        if(newPercent >= 0 &&!this.touch.initalized){ 
           const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
           const offsetWidth = newPercent * barWidth
           this._offset(offsetWidth)

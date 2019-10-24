@@ -54,7 +54,7 @@ export default {
     }
   },
   methods: {
-    searchBestMatch(key) {
+    _searchBestMatch(key) {
       searchBestMatch(key).then((res)=>{
         if (res.data.code===ERR_OK){
           const album = res.data.result.album
@@ -65,17 +65,17 @@ export default {
         }
       })
     },
-   showOrNot(){
-      this.showAlbum = this.album[0].name.length
-      this.showArtist = this.artist[0].name.length
-   },
-    searchSongs(key) {
-      searchSongs(key).then((res)=>{
-        if (res.data.code===ERR_OK){
-          this.songs = res.data.result.songs
-        }
-      })
-    },
+    showOrNot(){
+        this.showAlbum = this.album[0].name.length
+        this.showArtist = this.artist[0].name.length
+     },
+    _searchSongs(key) {
+        searchSongs(key).then((res)=>{
+          if (res.data.code===ERR_OK){
+            this.songs = res.data.result.songs
+          }
+        })
+      },
     selectAlbum(item) {
       const album = new Album({
             name: item.name,
@@ -114,16 +114,13 @@ export default {
       'insertSong'
     ])
   },
-  // created() {
-  //   this.searchBestMatch(this.query)
-  //   this.searchSongs(this.query)
-  // },
+
   watch: {
     query(newQuery) {
       if(newQuery !==''){
         this.$emit('query', newQuery)
-        this.searchBestMatch(newQuery)
-        this.searchSongs(newQuery)
+        this._searchBestMatch(newQuery)
+        this._searchSongs(newQuery)
       }else{
         this.$router.go(-1)
       }
@@ -237,4 +234,4 @@ export default {
           padding-left: .2rem
           color: #888
           font-size: 30px 
-</style>
+</style>c

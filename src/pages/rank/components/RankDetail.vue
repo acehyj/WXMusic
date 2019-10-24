@@ -44,7 +44,6 @@ export default {
   },
   methods: {
     _getSongList() {
-      console.log(this)
       this.topList.songs.forEach((item) => {
       this.songList.push(createSong(item))
      })      

@@ -10,8 +10,8 @@
             <i class="icon-back iconfont">&#xe603;</i>
           </div>
           <div class="text">
-            <h1 class="title" v-html="currentSong.name"></h1>
-            <h2 class="subtitle" v-html="currentSong.singer"></h2>
+            <h1 class="song" v-html="currentSong.name"></h1>
+            <h2 class="singer" v-html="currentSong.singer"></h2>
           </div>
         </div>
         <div  class="middle"
@@ -79,7 +79,7 @@
         </div>
     </div>
     </transition>
-    <audio  :src="this.songUrl" autoplay ref="audio" 
+    <audio  :src="songUrl" autoplay ref="audio" 
             @canplay="ready" 
             @error="error"
             @timeupdate="updateTime"
@@ -271,7 +271,6 @@ export default {
       getLyric(songId).then((res)=>{
         if(res.data.code===ERR_OK){ 
           this.songLyric = new parseLyric(res.data.lrc.lyric,this.handleLyric)
-          console.log(this.songLyric)
           if(this.playing){
             this.songLyric.play()
           }
@@ -305,6 +304,7 @@ export default {
           return
       }
       const left = this.currentShow === 'cd' ? 0 : -window.innerWidth
+      //offsetWidth: middle-r-向左滑动的距离
       const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + deltaX))
       this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`
       this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
@@ -350,7 +350,8 @@ export default {
   },
   watch: {
     currentSong(newSong,oldSong) {
-      if(newSong.id === oldSong.id) { //当切换播放模式的时候，虽然当前歌曲没变，但是它的index变化了，会导致audio播放
+      if(newSong.id === oldSong.id) { 
+      //当切换播放模式的时候，虽然当前歌曲没变，但是它的index变化了，会导致audio播放
         return
       }
       if (this.currentLyric) {
@@ -410,14 +411,14 @@ export default {
           display: flex 
           flex-direction: column
           margin: .1rem 0 0 .3rem
-          .title
-            font: $font-large-2x
+          .song
+            font:title $font-large-2x
             height: .36rem
             overflow: hidden
             text-overflow: ellipsis
-            white-space: no-wrap
-            margin-bottom: .12rem 
-          .subtitle
+            white-space: nowrap
+            margin-bottom: .1rem 
+          .singer
             font: $font-small
             color: #f0f0f0
       .middle
@@ -435,13 +436,15 @@ export default {
           padding-top: 74%
           margin-top : 1.2rem
           .cd-wrapper
+            box-sizing: border-box
             position: absolute
-            left: 13%
             top: 0
+            left: 50%
+            transform: translate(-50%)
             width: 74%
             height: 100%
             border-radius: 50%
-            border: 10px solid rgba(255, 255, 255, 0.1)
+            border: 18px solid rgba(255, 255, 255, 0.1)
             .cd
               height: 100%
               width: 100%

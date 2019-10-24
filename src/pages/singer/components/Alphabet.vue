@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import {debounce} from 'assets/js/util'
 
 export default {
   name: 'Alphabet',
@@ -41,7 +42,7 @@ export default {
       this.touchStatus = true
     },
     handleTouchMove(e) {
-      if(this.touchStatus) {
+    if(this.touchStatus) {
         if(this.timer) {
           clearTimeout(this.timer)
         }

@@ -34,7 +34,7 @@ export default {
     }
   },
   methods: {
-    searchSuggest(key) {
+    _searchSuggest(key) {
       searchSuggest(key).then((res)=>{
         if (res.data.code===ERR_OK){
           this.searchList = res.data.result.allMatch
@@ -50,8 +50,7 @@ export default {
       if(newQuery==='') {
         return
       }
-      this.searchSuggest(newQuery)
-      // this.$emit('query', newQuery)
+      this._searchSuggest(newQuery)
     }     
   }
 }

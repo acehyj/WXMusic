@@ -6,7 +6,7 @@ export function getHotKey() {
 
   return axios.get(url)
 }
-
+ 
 export function searchSuggest(key) {
   const url = HOST + `/search/suggest?keywords=${key}&type=mobile`
 
